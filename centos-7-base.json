@@ -1,0 +1,62 @@
+{
+    "variables": {
+        "centos_major_minor": "7.6",
+        "centos_yymm": "1810",
+        "iso_checksum": "38d5d51d9d100fd73df031ffd6bd8b1297ce24660dc8c13a3b8b4534a4bd291c",
+        "image_revision": "01"
+    },
+    "builders": [
+        {
+            "type": "virtualbox-iso",
+            "vm_name": "centos-7-base",
+            "guest_additions_mode": "disable",
+            "headless": true,
+            "iso_urls": [
+                "http://www.mirrorservice.org/sites/mirror.centos.org/{{user `centos_major_minor`}}.{{user `centos_yymm`}}/isos/x86_64/CentOS-7-x86_64-Minimal-{{user `centos_yymm`}}.iso",
+                "http://mirrors.melbourne.co.uk/sites/ftp.centos.org/centos/{{user `centos_major_minor`}}.{{user `centos_yymm`}}/isos/x86_64/CentOS-7-x86_64-Minimal-{{user `centos_yymm`}}.iso",
+                "http://mirror.bytemark.co.uk/centos/{{user `centos_major_minor`}}.{{user `centos_yymm`}}/isos/x86_64/CentOS-7-x86_64-Minimal-{{user `centos_yymm`}}.iso"
+            ],
+            "iso_checksum": "{{ user `iso_checksum` }}",
+            "iso_checksum_type": "sha256",
+            "guest_os_type": "RedHat_64",
+            "http_directory": ".",
+            "ssh_username": "root",
+            "ssh_password": "vagrant",
+            "ssh_wait_timeout": "7200s",
+            "boot_command": "<tab> net.ifnames=0 biosdevname=0 ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>",
+            "shutdown_command": "poweroff",
+            "hard_drive_interface": "sata",
+            "vboxmanage": [
+                [
+                    "modifyvm",
+                    "{{.Name}}",
+                    "--memory",
+                    "1024",
+                    "--cpus",
+                    "4"
+                ]
+            ]
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "script": "centos-7-base.sh"
+        }
+    ],
+    "post-processors": [
+        [
+            {
+                "type": "vagrant",
+                "output": "boxes/centos-7-base-{{.Provider}}.box",
+                "keep_input_artifact": true,
+                "vagrantfile_template": "Vagrantfile.template"
+            },
+            {
+                "type": "vagrant-cloud",
+                "box_tag": "jumperfly/centos-7-base",
+                "version": "{{user `centos_major_minor`}}.{{user `image_revision`}}"
+            }
+        ]
+    ]
+}
