@@ -5,6 +5,10 @@ pipeline {
         ansiColor('xterm')
     }
 
+    environment {
+        VAGRANT_CLOUD_TOKEN = credentials('vagrant-cloud')
+    }
+
     stages {
         stage('Clean') {
             steps {
