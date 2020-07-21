@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'vbox' }
 
     options {
         ansiColor('xterm')
