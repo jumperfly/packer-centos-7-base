@@ -2,7 +2,7 @@
     "variables": {
         "centos_major_minor": "7.7",
         "centos_yymm": "1908",
-        "iso_checksum": "9a2c47d97b9975452f7d582264e9fc16d108ed8252ac6816239a3b58cef5c53d",
+        "iso_checksum": "sha256:9a2c47d97b9975452f7d582264e9fc16d108ed8252ac6816239a3b58cef5c53d",
         "image_revision": "{{env `BUILD_NUMBER`}}"
     },
     "builders": [
@@ -17,7 +17,6 @@
                 "http://mirror.bytemark.co.uk/centos/{{user `centos_major_minor`}}.{{user `centos_yymm`}}/isos/x86_64/CentOS-7-x86_64-Minimal-{{user `centos_yymm`}}.iso"
             ],
             "iso_checksum": "{{ user `iso_checksum` }}",
-            "iso_checksum_type": "sha256",
             "guest_os_type": "RedHat_64",
             "http_directory": ".",
             "ssh_username": "root",
